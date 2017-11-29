@@ -1,0 +1,319 @@
+{% extends 'a_base2.html' %}
+
+{% block body %}
+
+
+{% load staticfiles %}
+
+<div class="wrapper">
+    <div class="sidebar" data-background-color="black" data-active-color="warning">
+
+    <!--
+        Tip 1: you can change the color of the sidebar's background using: data-background-color="white | black"
+        Tip 2: you can change the color of the active button using the data-active-color="primary | info | success | warning | danger"
+    -->
+
+        <div class="sidebar-wrapper">
+            <div class="logo">
+                <a href="#" class="simple-text">
+                     Welcome<br>
+                    {{ request.user.username }}
+                </a>
+            </div>
+
+            <ul class="nav">
+
+                <li>
+                    <a href="{% url 'infop:index'%}">
+                        <i class="ti-user"></i>
+                        <p>User Profile</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'infop:to_teaching'%}">
+                        <i class="ti-panel"></i>
+                        <p>Teachings</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'publications:index'%}">
+                        <i class="ti-text"></i>
+                        <p>Publications</p>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="{% url 'listall' %}">
+                        <i class="ti-pencil-alt2"></i>
+                        <p>All Pages</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'homepage:to_achievements' %}">
+                        <i class="ti-cup"></i>
+                        <p>Achievements</p>
+                    </a>
+                </li>
+                <li>
+                   <a href="{% url 'accounts:messaging' %}">
+                        <i class="ti-comments"></i>
+
+                        {% if not request.user.last_name == request.user.first_name%}
+                            <div style="color:red; font-weight: bold">{{ request.user.last_name}} new </div>
+                        {% endif %}
+                       <p>MESSEGES</p>
+
+
+                    </a>
+                </li>
+                <li class="active-pro">
+                    <a href="http://intranet.iitg.ernet.in/">
+                        <i class="ti-export"></i>
+                        <p>Intranet</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar bar1"></span>
+                        <span class="icon-bar bar2"></span>
+                        <span class="icon-bar bar3"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">All Pages</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+
+                            <form action="{% url 'accounts:searched_user' %}" method = "POST">
+                                {% csrf_token %}
+                                <input type="text" name="user_name"  placeholder="  Search Faculty" size="40">
+                                <button type="submit" class="btn btn-success">Search</button>
+                            </form>
+                        </li>
+
+
+                        <li class="dropdown">
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="ti-settings"></i>
+                                    <p>Settings</p>
+                                    <b class="caret"></b>
+                              </a>
+                              <ul class="dropdown-menu">
+                                <li><a href="{% url 'accounts:reset_password' %}">Change Password</a></li>
+
+                              </ul>
+                        </li>
+                        
+                        <li>
+	                        <a href="{% url 'accounts:index' %}">
+	                            Go to your page
+	                        </a>
+
+                        </li>
+                        <li>
+                        <a href="{% url 'accounts:logout' %}">
+                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span> Logout
+                        </a>
+
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+        <div class="col-lg-12 col-md-12 h-scroll"  >
+
+             {% for user in users%}
+                 {% if forloop.counter|divisibleby:2 == 0 %}
+            <div class="card" >
+                <div class="content animated slideInLeft">
+
+                        <div class="row">
+                            <div class="col-md-1">
+                                <div class="form-group">
+
+                                    {% for profile in profiles %}
+                                    {% if profile.username == user.username %}
+                                        {% if profile.p_photo %} <img class="avatar border-white" src="{{ profile.p_photo.url }}" alt="..."/>
+                                         {% else %} <img class="avatar border-white" src="{% static 'accounts/img/faces/face-1.jpg'%}" alt="..."/>
+                                        {% endif %}
+                                        {% endif %}
+                                        {% endfor %}
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Username</label>
+                                    <h6> <font style="text-transform: lowercase;">{{ user.username }}</font></h6>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+
+                                    {% for profile in profiles %}
+                                    {% if profile.username == user.username %}
+                                        <label>Designation</label>
+                                        <h6>{{ profile.designation }}</h6>
+                                        {% endif %}
+                                        {% endfor %}
+
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+
+                                    {% for profile in profiles %}
+                                    {% if profile.username == user.username %}
+                                        <label>Dept.</label>
+                                        <h6>{{ profile.dept }}</h6>
+                                        {% endif %}
+                                        {% endfor %}
+
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+
+                                    {% for profile in profiles %}
+                                    {% if profile.username == user.username %}
+                                        <label>Email</label>
+                                        <h6><font style="text-transform: lowercase;">{{ profile.email }}</font></h6>
+                                        {% endif %}
+                                        {% endfor %}
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                   <form action="{% url 'accounts:message' %}" method = "POST">
+                                        {% csrf_token %}
+                                       <input type="hidden" name="mssg_id" value="{{user.username}}" />
+                                       <button type="submit" class="btn btn-success">Message</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                   <form action="{% url 'viewonly:to_homepage' user.username %}" method = "POST">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-success">View Profile</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+
+                </div>
+            </div>
+            {% else %}
+                     <div class="card animated slideInRight" >
+                <div class="content">
+
+                        <div class="row">
+                            <div class="col-md-1">
+                                <div class="form-group">
+
+                                    {% for profile in profiles %}
+                                    {% if profile.username == user.username %}
+                                        {% if profile.p_photo %} <img class="avatar border-white" src="{{ profile.p_photo.url }}" alt="..."/>
+                                         {% else %} <img class="avatar border-white" src="{% static 'accounts/img/faces/face-1.jpg'%}" alt="..."/>
+                                        {% endif %}
+                                        {% endif %}
+                                        {% endfor %}
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Username</label>
+                                    <h6> <font style="text-transform: lowercase;">{{ user.username }}</font></h6>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+
+                                    {% for profile in profiles %}
+                                    {% if profile.username == user.username %}
+                                        <label>Designation</label>
+                                        <h6>{{ profile.designation }}</h6>
+                                        {% endif %}
+                                        {% endfor %}
+
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+
+                                    {% for profile in profiles %}
+                                    {% if profile.username == user.username %}
+                                        <label>Dept.</label>
+                                        <h6>{{ profile.dept }}</h6>
+                                        {% endif %}
+                                        {% endfor %}
+
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+
+                                    {% for profile in profiles %}
+                                    {% if profile.username == user.username %}
+                                        <label>Email</label>
+                                        <h6><font style="text-transform: lowercase;">{{ profile.email }}</font></h6>
+                                        {% endif %}
+                                        {% endfor %}
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                   <form action="{% url 'accounts:message' %}" method = "POST">
+                                        {% csrf_token %}
+                                       <input type="hidden" name="mssg_id" value="{{user.username}}" />
+                                        <button type="submit" class="btn btn-success">Message</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                   <form action="{% url 'viewonly:to_homepage' user.username %}" method = "POST">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-success">View Profile</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+
+                </div>
+            </div>
+
+            {% endif %}
+            {% endfor %}
+
+        </div>
+
+
+
+
+{#        {% for user in users%}#}
+{#			<li>#}
+{#                <a href="{% url 'viewonly:to_homepage' user.username %}">{{ user.username }}</a>#}
+{#			</li>#}
+{#		{% endfor %}#}
+{#	</ul>#}
+    </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block body %}
+  <div class="container">
+    <div class="backbox">
+      <div class="loginMsg">
+        <div class="textcontent">
+          <p class="title">Don't have an account?  </p>
+          <p>Sign up to Continue.</p>
+            <button id="switch1">Sign Up</button>
+        </div>
+      </div>
+      <div class="signupMsg visibility">
+        <div class="textcontent">
+          <p class="title">Have an account?</p>
+          <p>Log in to see your account.</p>
+          <button id="switch2">LOG IN</button>
+        </div>
+      </div>
+    </div>
+    <!-- backbox -->
+
+    <div class="frontbox">
+      <div class="login">
+        <h2>LOG IN</h2>
+         <form  class = "form-horizontal" role="form" action="{% url 'accounts:login_user'%}" method = "POST" enctype="multipart/form-data">
+            {% csrf_token %}
+          <div class="inputbox">
+             <input type="text" name="username" placeholder="  Username">
+             <input type="password" name="password" placeholder="  PASSWORD">
+          </div>
+          {% if error_message %}
+        <p><strong>{{ error_message }}</strong></p>
+          {% endif %}
+
+            <footer><a href = "{% url 'accounts:admin' %}">Admin Page</a><br> <a href="{% url 'listall' %}">List all Pages</a></footer>
+                <button type="submit" class="btn btn-success">Login</button>
+          </form>
+      </div>
+      
+      
+
+
+      <div class="signup hide">
+        <h2>SIGN UP</h2>
+        <div class="inputbox">
+          
+        
+         <form class="form-horizontal" role="form" action="{% url 'accounts:register'%}" method="POST" enctype="multipart/form-data">
+             {% csrf_token %}
+             <div class="inputbox">
+                <input type="text" name="username" placeholder="  Username">
+                 <input type="text" name="email" placeholder="  Email">
+                <input type="password" name="password" placeholder="  PASSWORD">
+                 <input type="password" name="password1" placeholder="  CONFIRM PASSWORD">
+             <div class="g-recaptcha" data-sitekey="6LdOmjcUAAAAAANOqIL3g99NaAwxg_2ShBFMh4MX" style="transform:scale(0.77);-webkit-transform:scale(0.55);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>
+{#                 {% if error_message %}#}
+{#        <p><strong>{{ error_message }}</strong></p>#}
+{#          {% endif %}#}
+          </div>
+
+          <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+        </div>
+      </div>
+
+    </div>
+    <!-- frontbox -->
+  </div>
+
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<h2>Enter achievement data</h2>
+
+<form action="{% url 'achievements:to_homepage' %}" method="post" style="display: inline;">
+    {% csrf_token %}
+    <input type="hidden" name="to_home_page"/>
+    <button type="submit" class="btn btn-default btn-sm">
+        Go to homepage
+    </button>
+</form>
+
+{% if  achievements %}
+            {% for ach in achievements %}
+                <div class="col-sm-4 col-lg-2">
+                    <div class="thumbnail">
+                        <div class="caption">
+                    <h2>{{ ach.achievement }} </h2>
+                    <form action="{% url 'achievements:delete_achievement'  ach.id %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="ach_id" value="{{ ach.id }}" />
+                        <button type="submit" class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </form>
+                    
+                        </div>
+                    </div>
+                </div>
+        {% cycle '' '' '' '' '' '<div class="clearfix visible-lg"></div>' %}
+            {% endfor %}
+{% endif %}
+<div class="col-sm-12">
+    <a href="{% url 'achievements:create_achievement' %}">
+        <button type="button" class="btn btn-success">
+            <span class="glyphicon glyphicon-plus">Add Achievement</span>
+        </button>
+    </a>
+</div>
+
+
+<form action = "{% url 'accounts:logout' %}" method = "POST">
+    {% csrf_token %}
+    <button type = "submit"> LOGOUT </button>
+</form>
+
+{% endblock %}

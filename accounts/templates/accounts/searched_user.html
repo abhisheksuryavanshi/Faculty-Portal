@@ -1,0 +1,141 @@
+{% extends 'a_base2.html' %}
+
+{% block body %}
+
+
+{% load staticfiles %}
+
+<div class="wrapper">
+    <div class="sidebar" data-background-color="black" data-active-color="warning">
+
+    <!--
+        Tip 1: you can change the color of the sidebar's background using: data-background-color="white | black"
+        Tip 2: you can change the color of the active button using the data-active-color="primary | info | success | warning | danger"
+    -->
+
+        <div class="sidebar-wrapper">
+            <div class="logo">
+                <a href="#" class="simple-text">
+                    Welcome<br>
+                    {{ request.user.username }}
+                </a>
+            </div>
+
+            <ul class="nav">
+
+                <li>
+                    <a href="{% url 'infop:index'%}">
+                        <i class="ti-user"></i>
+                        <p>User Profile</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'infop:to_teaching'%}">
+                        <i class="ti-panel"></i>
+                        <p>Teachings</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'publications:index'%}">
+                        <i class="ti-text"></i>
+                        <p>Publications</p>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="{% url 'listall' %}">
+                        <i class="ti-pencil-alt2"></i>
+                        <p>All Pages</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'homepage:to_achievements' %}">
+                        <i class="ti-cup"></i>
+                        <p>Achievements</p>
+                    </a>
+                </li>
+                <li class="active-pro">
+                    <a href="http://intranet.iitg.ernet.in/">
+                        <i class="ti-export"></i>
+                        <p>Intranet</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar bar1"></span>
+                        <span class="icon-bar bar2"></span>
+                        <span class="icon-bar bar3"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">All Pages</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <form action="{% url 'accounts:searched_user'%}" method = "POST">
+                                {% csrf_token %}
+                                <input type="text" name="user_name"  placeholder="  Search Faculty" size="40">
+                                <button type="submit" class="btn btn-success">Search</button>
+                            </form>
+                        </li>
+                        <li>
+                            <form action="{% url 'accounts:listall'%}" method = "POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success">Back</button>
+                            </form>
+                        </li>
+
+
+                        <li class="dropdown">
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="ti-settings"></i>
+                                    <p>Settings</p>
+                                    <b class="caret"></b>
+                              </a>
+                              <ul class="dropdown-menu">
+                                <li><a href="{% url 'accounts:reset_password' %}">Change Password</a></li>
+
+                              </ul>
+                        </li>
+                        
+                        <li>
+	                        <a href="{% url 'accounts:index' %}">
+	                            Go to your page
+	                        </a>
+
+                        </li>
+                        <li>
+                        <a href="{% url 'accounts:logout' %}">
+                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span> Logout
+                        </a>
+
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+
+
+	<ul>
+
+
+
+        {% for user in users%}
+			{% if searched_user in user.username  %}
+                <li>
+                <a href="{% url 'viewonly:to_homepage' user.username %}">{{ user.username }}</a>
+                </li>
+            {% endif %}
+
+		{% endfor %}
+	</ul>
+    </div>
+</div>
+{% endblock %}

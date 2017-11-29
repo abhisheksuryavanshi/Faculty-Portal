@@ -1,0 +1,271 @@
+{% extends 'a_base2.html' %}
+
+{% block body %}
+
+
+<body>
+{% load staticfiles %}
+
+<div class="wrapper">
+	<div class="sidebar" data-background-color="black" data-active-color="warning">
+
+    <!--
+		Tip 1: you can change the color of the sidebar's background using: data-background-color="white | black"
+		Tip 2: you can change the color of the active button using the data-active-color="primary | info | success | warning | danger"
+	-->
+
+    <div class="sidebar-wrapper">
+            <div class="logo">
+                <a href="#" class="simple-text">
+                     Welcome<br>
+                    {{ request.user.username }}
+                </a>
+            </div>
+
+            <ul class="nav">
+
+                <li>
+                    <a href="{% url 'infop:index'%}">
+                        <i class="ti-user"></i>
+                        <p>User Profile</p>
+                    </a>
+                </li>
+                <li >
+                    <a href="{% url 'infop:to_teaching'%}">
+                        <i class="ti-panel"></i>
+                        <p>Teachings</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'publications:index'%} ">
+                        <i class="ti-text"></i>
+                        <p>Publications</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'listall' %}">
+                        <i class="ti-pencil-alt2"></i>
+                        <p>All Pages</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'homepage:to_achievements' %}">
+                       <i class="ti-cup"></i>
+                        <p>Achievements</p>
+                    </a>
+                </li>
+                <li class="active">
+                   <a href="{% url 'accounts:messaging' %}">
+                        <i class="ti-comments"></i>
+
+                        {% if not request.user.last_name == request.user.first_name%}
+                            <div style="color:red; font-weight: bold">{{ request.user.last_name}} new </div>
+                        {% endif %}
+                       <p>MESSEGES</p>
+
+
+                    </a>
+                </li>
+                <li class="active-pro">
+                     <a href="http://intranet.iitg.ernet.in/">
+                       <i class="ti-export"></i>
+                        <p>Intranet</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-panel">
+		<nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar bar1"></span>
+                        <span class="icon-bar bar2"></span>
+                        <span class="icon-bar bar3"></span>
+                    </button>
+                   <div class = "ptxx">
+                    <a class="navbar-brand" href="#">Message</a>
+                    </div>
+                   </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+
+                       <li class="dropdown">
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="ti-settings"></i>
+                                    <p>Settings</p>
+                                    <b class="caret"></b>
+                              </a>
+                              <ul class="dropdown-menu">
+                                <li><a href="{% url 'accounts:reset_password' %}">Change Password</a></li>
+
+                              </ul>
+                        </li>
+						<li>
+                            <a href="{% url 'accounts:logout' %}">
+                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span> Logout
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+        <style>
+            .notify{
+                background-color: #f24b4b;
+                text-align: center;
+                color: #e5ef2d;
+            }
+        </style>
+
+        {% if not user.first_name == user.last_name %}
+           <div class="container-fluid">
+            <div class="notify">
+               <i class="ti-bell"></i>
+            {{ error_message2 }}
+            </div>
+           </div>
+        {% endif %}
+
+
+
+        <div class="content">
+            <div class="container-fluid ">
+                <div class="row">
+                    <div class="col-lg-6 col-md-5">
+                         <div class="card">
+                            <div class="header">
+                                <h4 class="title"><strong>Send Message</strong></h4>
+                            </div>
+
+                             {% if error_message %}
+                                 ...................................................................................................................................................................................
+                                 <p><strong>{{ error_message }}</strong></p>
+                             {% endif %}
+                            <div class="content">
+                                <form action="{% url 'accounts:send'%}" method="POST">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label>Send To <small>  (Enter 'all' to send to all users)</small></label>
+                                                {% if to %}
+                                                    <input type="text" class="form-control border-input" name="to" value="{{ to }}" >
+                                                {% else %}
+                                                    <input type="text" class="form-control border-input" name="to" placeholder="Enter Username" >
+                                                {% endif %}
+                                            </div>
+                                        </div>
+{#                                        <div class="col-md-3">#}
+{#                                            <div class="form-group">#}
+{#                                                <label>Send All </label>#}
+{#                                                <input type="radio" class="form-control border-input" name="check" placeholder="Enter Username" >#}
+{#                                            </div>#}
+{#                                        </div>#}
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Your Message</label>
+                                                <textarea rows="18" class="form-control border-input" name="send" placeholder="Here can be your Message" ></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-info btn-fill btn-wd">SEND</button>
+                                    </div>
+                                    <div class="clearfix"></div>
+
+                                </form>
+                            </div>
+
+                         </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-5 h-scroll ">
+                        <div class="card">
+                            <div class="header">
+                                <h4 class="title"><strong>Inbox</strong></h4>
+                            </div>
+                        </div>
+                        {% for mail in mails reversed %}
+                        <div class="card">
+                            <div class="content">
+
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label>{{ forloop.counter }}.<br>From</label>
+                                                {{ mail.sender }} :
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                -{{ mail.date }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+
+                                            <div class="form-group">
+                                                 {% if forloop.counter <= diff %}
+                                                <span class="glyphicon glyphicon-eye-close"></span>
+                                                {% endif %}
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <pre class="card">{{ mail.inbox }}</pre>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <form action="{% url 'accounts:delete_messages'  mail.id %}" method="POST" style="display: inline;">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="ach_id" value="{{ mail.id }}" />
+                                                    <button type="submit" class="btn btn-default btn-sm">
+                                                        <span class="glyphicon glyphicon-trash"></span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+{#                                   <label>#}
+{#                                       _______________________________________________________________________#}
+{#                                       _______________________________________________________________________#}
+{##}
+{#                                   </label>#}
+
+
+                            </div>
+
+                         </div>
+                    {% endfor %}
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+</div>
+
+
+</body>
+
+
+{% endblock %}
+</html>

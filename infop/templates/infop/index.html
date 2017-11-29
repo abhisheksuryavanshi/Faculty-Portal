@@ -1,0 +1,371 @@
+{% extends 'a_base1.html' %}
+
+{% block body %}
+
+{% with ansh.dept as deas %}
+
+<body>
+{% load staticfiles %}
+
+<div class="wrapper">
+    <div class="sidebar" data-background-color="black" data-active-color="warning">
+
+    <!--
+        Tip 1: you can change the color of the sidebar's background using: data-background-color="white | black"
+        Tip 2: you can change the color of the active button using the data-active-color="primary | info | success | warning | danger"
+    -->
+
+        <div class="sidebar-wrapper">
+            <div class="logo">
+                <a href="#" class="simple-text">
+                     Welcome<br>
+                    {{ anshp.0.first_name }}
+                </a>
+            </div>
+
+            <ul class="nav">
+
+                <li class="active">
+                    <a href="{% url 'infop:index'%}">
+                        <i class="ti-user"></i>
+                        <p>User Profile</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'infop:to_teaching'%}">
+                        <i class="ti-panel"></i>
+                        <p>Teachings</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'publications:index'%}">
+                        <i class="ti-text"></i>
+                        <p>Publications</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'listall' %}">
+                        <i class="ti-pencil-alt2"></i>
+                        <p>All Pages</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'homepage:to_achievements' %}">
+                        <i class="ti-cup"></i>
+                        <p>Achievements</p>
+                    </a>
+                </li>
+                <li>
+                   <a href="{% url 'accounts:messaging' %}">
+                        <i class="ti-comments"></i>
+
+                        {% if not request.user.last_name == request.user.first_name%}
+                            <div style="color:red; font-weight: bold">{{ request.user.last_name}} new </div>
+                        {% endif %}
+                       <p>MESSEGES</p>
+
+
+                    </a>
+                </li>
+                <li class="active-pro">
+                    <a href="http://intranet.iitg.ernet.in/">
+                        <i class="ti-export"></i>
+                        <p>Intranet</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar bar1"></span>
+                        <span class="icon-bar bar2"></span>
+                        <span class="icon-bar bar3"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">User Profile</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+
+                         <li class="dropdown">
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="ti-settings"></i>
+                                    <p>Settings</p>
+                                    <b class="caret"></b>
+                              </a>
+                              <ul class="dropdown-menu">
+                                <li><a href="{% url 'accounts:reset_password' %}">Change Password</a></li>
+
+                              </ul>
+                        </li>
+                        <li>
+                        <a href="{% url 'accounts:logout' %}">
+                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span> Logout
+                        </a>
+
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+
+
+
+
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-4 col-md-5 h-scroll">
+
+
+                        {% for ansh in anshp %}
+                        <div class="card card-user">
+                            <div class="image">
+                                <img src="http://www.iitg.ernet.in/html/images/logo.png" height="100px"  alt="..."/>
+                            </div>
+                            <div class="content">
+                                <div class="author">
+                                 {% if ansh.p_photo %} <img class="avatar border-white" src="{{ ansh.p_photo.url }}" alt="..."/>
+                                 {% else %} <img class="avatar border-white" src="{% static 'accounts/img/faces/face-1.jpg'%}" alt="..."/>
+                                 {% endif %}
+                                 <h4>{{ ansh.first_name }} {{ ansh.last_name }}</h4>
+                                    <a href="{% url 'accounts:messaging' %}"><h5 class="title"> {{ ansh.username }}<br /></h5></a>
+                                     <small>{{ ansh.email }}</small>
+                                  </h4>
+                                </div>
+                                <p class="description text-center">
+                                    <strong>{{ ansh.dept }}</strong><br>
+                                    {{ ansh.about }} <br>
+
+                                </p>
+                            </div>
+                            <hr>
+                            <div class="text-center">
+                                <div class="row">
+                                    <div class="col-md-4 col-md-offset-1">
+                                        <h5>{{ ansh.phone_number }}<br /><small>Contact</small></h5>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <h5>{{ ansh.designation }}<br /><small>Authority</small></h5>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <h5>{{ ansh.institute_name }}<br /><small>At</small></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        <div class="card card-user">
+                            <div class="content">
+                                <div class="title">
+                                <h5>Office Details</h5>
+                            {% for office in office_details %}
+                                    <h6>Room number - {{ office.room_no }}<br />
+                                        Phone number - {{ office.phone_number }}<br />
+                                        email - {{ office.email }}
+                                    </h6>
+                                <br/>
+                                
+                                <form action="{% url 'homepage:delete_office' office.id %}" method="post" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="office_id" value="{{ office.id }}" />
+                                    <button type="submit" class="btn btn-default btn-sm">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </button>
+                                </form>
+
+                            {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center"><a href="{% url 'homepage:create_office_details' %}"><button type="button" class="btn btn-info btn-fill btn-wd">Add office details</button></a></div>
+
+                        <div class="card card-user">
+                            
+                            <div class="content">
+                                <div class="title">
+                                    <h5>Work Experiences</h5>
+                        {% for work in work_experience %}
+                                    <h6>{{ work.job_post }}<br />
+                                        Experiance - {{ work.job_experience }}<br />
+                                        Location - {{ work.job_place }}<br />
+                                        Start - {{ work.job_start }}<br />
+                                        End - {{ work.job_end }}
+                                    </h6>
+                                    <br/>
+
+                                    <form action="{% url 'homepage:delete_work' work.id %}" method="post" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="work_id" value="{{ work.id }}" />
+                                    <button type="submit" class="btn btn-default btn-sm">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </button>
+                                </form>
+                        {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center"><a href="{% url 'homepage:create_work_experience' %}"><button type="button" class="btn btn-info btn-fill btn-wd">Add work experience</button></a></div>
+
+                        <div class="card card-user">
+                            
+                            <div class="content">
+                                <div class="title">
+                                    <h5>Research Interests</h5>
+                                    <ul>
+                        {% for research in research_interests %}
+                                    <li><h6>{{ research.research_area }}</h6></li>
+                                    <form action="{% url 'homepage:delete_research' research.id %}" method="post" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="research_id" value="{{ research.id }}" />
+                                    <button type="submit" class="btn btn-default btn-sm">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </button>
+                                    </form>
+                                    <br/>
+                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                         <div class="text-center">
+
+
+                        <a href="{% url 'homepage:create_research_interests' %}"><button type="button" class="btn btn-info btn-fill btn-wd">Add research interests</button></a>
+
+                        </div>
+
+                    </div>
+
+                    <form role = "form" action="{% url 'infop:save'%}" method = "POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                    <div class="col-lg-8 col-md-7">
+                        <div class="card">
+                            <div class="header">
+                                <h4 class="title">Edit Profile</h4>
+                            </div>
+                            <div class="content">
+                                <form>
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <label>Department</label>
+                        <input type="text" class="form-control border-input" name = "dept" value="{{ anshp.0.dept }}" >
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Username</label>
+                                                <input type="text" class="form-control border-input" name = "username" value="{{ anshp.0.username }}" >
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Email address</label>
+                                                <input type="email" class="form-control border-input" name = "email" value="{{ anshp.0.email }}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>First Name</label>
+                                                <input type="text" class="form-control border-input" name = "first_name" value="{{ anshp.0.first_name }}" >
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Last Name</label>
+                                                <input type="text" class="form-control border-input" name = "last_name" value="{{ anshp.0.last_name }}" >
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Designation</label>
+                                                <input type="text" class="form-control border-input" name = "designation" value="{{ anshp.0.designation }}" >
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Institute Name</label>
+                                                <input type="text" class="form-control border-input" name = "institute_name" value="{{ anshp.0.institute_name }}" >
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+
+
+                                    <div class="row">
+                                        
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Contact No.</label>
+                                                <input type="text" class="form-control border-input" name = "phone_number" value="{{ anshp.0.phone_number }}" >
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Upload Photo</label>
+                                                <input type="file" class="btn btn-info btn-fill btn-wd" name="profile_photo" accept="image/*" >
+                                            </div>
+                                        </div>
+                                       
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <div class="form-group">
+                                                <label>Page Link</label>
+                                                <input rows="1" class="form-control border-input" name = "link" value = "{{ anshp.0.link }}" ></input>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>About Me</label>
+                                                <textarea rows="5" class="form-control border-input" name = "about" placeholder="Here can be your description" ></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-info btn-fill btn-wd">Update Profile</button>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+</div>
+
+
+</body>
+
+{% endwith %}
+{% endblock %}
+</html>
