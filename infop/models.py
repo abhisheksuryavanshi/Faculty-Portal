@@ -1,6 +1,5 @@
 from django.contrib.auth.models import Permission, User
 from django.db import models
-import media
 
 class Info(models.Model):
     user = models.ForeignKey(User, default=1)
